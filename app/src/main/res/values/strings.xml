@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WhiskDroid</string>
+    <string name="call_action">Call Action</string>
+    <string name="action_result">...</string>
+</resources>
