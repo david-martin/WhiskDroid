@@ -32,8 +32,10 @@ import javax.net.ssl.X509TrustManager;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
-    private static final String OPENWHISK_URL = "openwhisk-openwhisk.192.168.42.1.nip.io";
+    private static final String OPENWHISK_URL = "openwhisk-openwhisk.apps.boston.openshiftworkshop.com";
     private static final String OPENWHISK_ACTION = "testaction";
+    private static final String OPENWHISK_AUTH = "23bc46b1-71f6-4ed5-8c54-816aa4f8c502:jU16oYksc7pPhDC0HJEtsrBnGD0hOuJUJPg0MaPnKnhR3CPILLCYbjdYhEKrLyjR";
+    private static final String OPENWHISK_NAMESPACE = "_";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://" + OPENWHISK_URL + "/api/v1/namespaces/_/actions/" + OPENWHISK_ACTION + "?blocking=true&result=true";
+        String url = "https://" + OPENWHISK_URL + "/api/v1/namespaces/" + OPENWHISK_NAMESPACE + "/actions/" + OPENWHISK_ACTION + "?blocking=true&result=true";
 
         JSONObject params = new JSONObject();
         try {
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                String credentials = "23bc46b1-71f6-4ed5-8c54-816aa4f8c502:Wh8tmGsXegOwk7gKhmDiLd4vSlr8ik4G4N7qTs37AqGlUh4hDPjTmqRxa6Jv5tKn";
+                String credentials = OPENWHISK_AUTH;
                 String auth = "Basic "
                         + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 headers.put("Accept", "application/json");
