@@ -14,6 +14,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.openwhiskclient.OpenWhiskAction;
+import com.example.openwhiskclient.OpenWhiskClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,9 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     public void onClick(View view) {
         final TextView mTextView = (TextView) findViewById(R.id.action_result);
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://" + OPENWHISK_URL + "/api/v1/namespaces/" + OPENWHISK_NAMESPACE + "/actions/" + OPENWHISK_ACTION + "?blocking=true&result=true";
+        OpenWhiskClient client = new OpenWhiskClient(OPENWHISK_URL, OPENWHISK_NAMESPACE, OPENWHISK_AUTH);
 
         JSONObject params = new JSONObject();
         try {
@@ -66,9 +66,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             throw new RuntimeException(e);
         }
 
-        // Request a string response from the provided URL.
-        JsonObjectRequest whiskCall = new JsonObjectRequest(Request.Method.POST, url, params,
-                response -> {
+        OpenWhiskAction testaction = new OpenWhiskAction() {
+            @Override
+            public String getName() {
+                return "testaction";
+            }
+        };
+
+        client.invoke(testaction, params, response -> {
                     // Display the first 500 characters of the response string.
                     try {
                         mTextView.setText("Response is: "+ response.toString(2));
@@ -78,22 +83,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 }, error -> {
                     mTextView.setText("That didn't work!");
                     Log.e("app", "error calling openwhisk", error);
-                }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                String credentials = OPENWHISK_AUTH;
-                String auth = "Basic "
-                        + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                headers.put("Accept", "application/json");
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", auth);
-                return headers;
-            }
-        };;
+                }, this.getApplicationContext());
 
-        // Add the request to the RequestQueue.
-        queue.add(whiskCall);
     }
 
     public static class NukeSSLCerts {
