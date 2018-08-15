@@ -1,1 +1,1 @@
-include ':app', ':openwhiskclient-release'
+include ':app', ':openwhiskclient'
