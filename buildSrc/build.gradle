@@ -1,0 +1,26 @@
+buildscript {
+    repositories{
+        google()
+        jcenter()
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.sun.codemodel:codemodel:2.6'
+        classpath 'com.example.openwhiskclient:openwhiskclient-release:1.0@aar'
+    }
+}
+
+repositories {
+    jcenter()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation 'com.sun.codemodel:codemodel:2.6'
+    implementation 'com.example.openwhiskclient:openwhiskclient-release:1.0@aar'
+}
